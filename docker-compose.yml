@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # 1. Motor de Base de Datos PostgreSQL
+  reach-db:
+    image: postgres:15-alpine
+    container_name: reach-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: reach_admin
+      POSTGRES_PASSWORD: reach_password
+      POSTGRES_DB: reach_crm
+    ports:
+      - "5432:5432"
+    volumes:
+      - reach_postgres_data:/var/lib/postgresql/data
+
+  # 2. Interfaz Gráfica
+  reach-pgadmin:
+    image: dpage/pgadmin4
+    container_name: reach-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@reach.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - reach-db
+
+volumes:
+  reach_postgres_data:
